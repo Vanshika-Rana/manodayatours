@@ -1,6 +1,7 @@
 /* ==========================================
    Pricing Section
    Clear, trustworthy pricing display
+   Card layout on mobile, table on desktop
    ========================================== */
 
 "use client";
@@ -11,7 +12,7 @@ const allPackages = [
   {
     id: "char-dham",
     name: "Char Dham Yatra",
-    route: "Yamunotri – Gangotri – Kedarnath – Badrinath",
+    route: "Yamunotri, Gangotri, Kedarnath, Badrinath",
     duration: "9 Nights / 10 Days",
     vehicles: [
       { type: "Non-AC Car (Swift Dzire / Etios)", pax: "4", price: 35300 },
@@ -64,24 +65,24 @@ export default function Pricing() {
     <section id="all-packages" className="section bg-white">
       <div className="container mx-auto">
         {/* Header */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-10 md:mb-12">
           <p className="section-label mb-4">Transparent Pricing</p>
-          <h2 className="font-(family-name:--font-playfair) text-3xl md:text-4xl leading-tight text-(--warm-gray-900) mb-4">
+          <h2 className="font-(family-name:--font-playfair) text-2xl sm:text-3xl md:text-4xl leading-tight text-(--warm-gray-900) mb-4">
             Complete Package Pricing
           </h2>
-          <p className="text-(--warm-gray-500) max-w-xl mx-auto">
+          <p className="text-(--warm-gray-500) max-w-xl mx-auto text-sm sm:text-base">
             No hidden charges. All prices include vehicle, driver, accommodation, 
             meals, permits, and complete yatra assistance.
           </p>
         </div>
 
-        {/* Tab Navigation */}
-        <div className="flex flex-wrap justify-center gap-2 mb-10">
+        {/* Tab Navigation - horizontal scroll on mobile */}
+        <div className="flex gap-2 mb-8 md:mb-10 overflow-x-auto pb-2 md:pb-0 md:flex-wrap md:justify-center scrollbar-hide">
           {allPackages.map((pkg) => (
             <button
               key={pkg.id}
               onClick={() => setActiveTab(pkg.id)}
-              className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all ${
+              className={`px-4 py-2 sm:px-5 sm:py-2.5 rounded-full text-sm font-semibold transition-all whitespace-nowrap shrink-0 ${
                 activeTab === pkg.id
                   ? "bg-(--warm-gray-800) text-white shadow-lg"
                   : "bg-(--warm-gray-100) text-(--warm-gray-600) hover:bg-(--warm-gray-200)"
@@ -94,23 +95,39 @@ export default function Pricing() {
 
         {/* Pricing Card */}
         <div className="max-w-3xl mx-auto">
-          <div className="bg-(--cream) rounded-3xl overflow-hidden border border-(--warm-gray-200)">
+          <div className="bg-(--cream) rounded-2xl sm:rounded-3xl overflow-hidden border border-(--warm-gray-200)">
             {/* Package Header */}
-            <div className="bg-(--warm-gray-800) text-white p-8 text-center">
-              <h3 className="font-(family-name:--font-playfair) text-2xl md:text-3xl mb-2 text-white">
+            <div className="bg-(--warm-gray-800) text-white p-5 sm:p-8 text-center">
+              <h3 className="font-(family-name:--font-playfair) text-xl sm:text-2xl md:text-3xl mb-2 text-white">
                 {activePackage.name}
               </h3>
-              <p className="text-white/70">{activePackage.route}</p>
-              <div className="inline-flex items-center gap-2 mt-4 px-4 py-1.5 bg-primary text-(--warm-gray-900) rounded-full text-sm font-semibold">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <p className="text-white/70 text-sm sm:text-base">{activePackage.route}</p>
+              <div className="inline-flex items-center gap-2 mt-3 sm:mt-4 px-3 sm:px-4 py-1.5 bg-primary text-(--warm-gray-900) rounded-full text-xs sm:text-sm font-semibold">
+                <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
                 {activePackage.duration}
               </div>
             </div>
 
-            {/* Pricing Table */}
-            <div className="p-6 md:p-8">
+            {/* Mobile: Compact stacked list */}
+            <div className="md:hidden divide-y divide-(--warm-gray-200)">
+              {activePackage.vehicles.map((vehicle, index) => (
+                <div key={index} className="px-4 py-3.5">
+                  <p className="text-(--warm-gray-700) text-sm">{vehicle.type}</p>
+                  <div className="flex items-baseline justify-between mt-1">
+                    <span className="text-(--warm-gray-400) text-xs">{vehicle.pax} pax</span>
+                    <p className="text-lg font-bold text-(--warm-gray-900)">
+                      ₹{vehicle.price.toLocaleString("en-IN")}
+                      <span className="text-xs font-normal text-(--warm-gray-400)"> /person</span>
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Desktop: Table Layout */}
+            <div className="p-6 md:p-8 hidden md:block">
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-(--warm-gray-200)">
@@ -142,19 +159,21 @@ export default function Pricing() {
                   ))}
                 </tbody>
               </table>
+            </div>
 
-              {/* CTA */}
-              <div className="mt-8 pt-6 border-t border-(--warm-gray-200) flex flex-col sm:flex-row gap-4 justify-center">
+            {/* CTA */}
+            <div className="px-4 pb-5 sm:px-6 sm:pb-6 md:px-8 md:pb-8 md:pt-0 pt-0">
+              <div className="pt-5 sm:pt-6 border-t border-(--warm-gray-200) flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
                 <a
                   href={`https://wa.me/917310554723?text=Namaste!%20I%20am%20interested%20in%20${encodeURIComponent(activePackage.name)}.%20Please%20share%20details.`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="btn-primary"
+                  className="btn-primary text-sm sm:text-base"
                 >
                   <WhatsAppIcon />
                   Enquire on WhatsApp
                 </a>
-                <a href="tel:+917310554723" className="btn-outline">
+                <a href="tel:+917310554723" className="btn-outline text-sm sm:text-base">
                   <PhoneIcon />
                   Call +91 73105 54723
                 </a>
@@ -163,18 +182,18 @@ export default function Pricing() {
           </div>
 
           {/* Notes */}
-          <div className="mt-8 p-6 bg-(--primary)/10 rounded-2xl border border-(--primary)/20">
+          <div className="mt-6 sm:mt-8 p-4 sm:p-6 bg-(--primary)/10 rounded-xl sm:rounded-2xl border border-(--primary)/20">
             <div className="flex items-start gap-3">
-              <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0 mt-0.5">
-                <svg className="w-4 h-4 text-(--warm-gray-900)" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-primary flex items-center justify-center shrink-0 mt-0.5">
+                <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-(--warm-gray-900)" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
               <div>
-                <h4 className="font-semibold text-(--warm-gray-800) mb-2">Good to Know:</h4>
-                <ul className="text-sm text-(--warm-gray-600) space-y-1">
+                <h4 className="font-semibold text-(--warm-gray-800) text-sm sm:text-base mb-1.5 sm:mb-2">Good to Know:</h4>
+                <ul className="text-xs sm:text-sm text-(--warm-gray-600) space-y-1">
                   <li>• Rates may vary slightly based on travel dates and route conditions</li>
-                  <li>• Peak season (May–June & Sept–Oct) tariffs may apply</li>
+                  <li>• Peak season (May to June & Sept to Oct) tariffs may apply</li>
                   <li>• All yatras operated as per Uttarakhand Government norms 2026</li>
                   <li>• Helicopter/pony/palki charges are payable separately</li>
                 </ul>
